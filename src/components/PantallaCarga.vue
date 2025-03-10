@@ -5,6 +5,11 @@
 </template>
 
 <script>
+/**
+ * @component
+ * @name PantallaCarga
+ * @description Este componente muestra una pantalla de carga con un spinner.
+ */
 export default {
     name: 'PantallaCarga'
 }

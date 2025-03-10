@@ -7,39 +7,88 @@
 </template>
 
 <script>
+/**
+ * @component
+ * @name CampoTexto
+ * @description Un campo de texto con validación y personalización de etiquetas y marcadores de posición.
+ */
 export default {
+    name: 'CampoTexto',
     props: {
+        /**
+         * @description Valor inicial del campo de texto.
+         * @type {String}
+         * @default ""
+         */
         value: {
             type: String,
             default: ""
         },
+        /**
+         * @description Etiqueta del campo de texto.
+         * @type {String}
+         * @default "texto"
+         */
         etiqueta: {
             type: String,
             default: "texto"
         },
+        /**
+         * @description Placeholder del campo de texto.
+         * @type {String}
+         * @default ""
+         */
         placeholder: {
             type: String,
             default: ""
         }
     },
+    data() {
+        return {
+            /**
+             * @description Texto ingresado en el campo de texto.
+             * @type { String }
+             */
+            texto: this.value,
+            /**
+             * @description Estado de la validación del campo de texto.
+             * @type {Boolean|null}
+             */
+            textState: null,
+            /**
+             * @description Valor de la etiqueta mostrado.
+             * @type {String}
+             */
+            valorEtiqueta: this.etiqueta,
+            /**
+             * @description Placeholder mostrado en el campo de texto.
+             * @type {String}
+             */
+            valorPlaceholder: this.placeholder
+        }
+    },
     computed: {
+        /**
+         * @description Validador para verificar si el campo de texto no está vacío.
+         * @returns {Boolean}
+         */
         validador() {
             return this.texto.length > 0;
         }
     },
-    data() {
-        return {
-            texto: this.value,
-            textState: null,
-            valorEtiqueta: this.etiqueta,
-            valorPlaceholder: this.placeholder
-        }
-    },
     watch: {
+        /**
+         * @description Observa cambios en el texto ingresado.
+         * @param {String} value - Nuevo texto ingresado.
+         */
         texto(value) {
-            this.textState = value?  true : false;
+            this.textState = value ? true : false;
             this.$emit('input', value);
         },
+        /**
+         * @description Observa cambios en la prop `value`.
+         * @param {String} value - Nuevo valor.
+         */
         value(value) {
             this.texto = value;
         }

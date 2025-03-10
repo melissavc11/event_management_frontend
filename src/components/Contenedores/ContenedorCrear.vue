@@ -1,15 +1,25 @@
 <template>
     <div>
+        <!-- Componente de alerta para mostrar mensajes -->
         <MensajeAlerta :mensaje="mensajeAlerta" :tipo="tipoAlerta" ref="componenteAlerta" />
-        <CampoTexto v-model="tituloEvento" etiqueta="Título del evento" placeholder="Escriba el título del evento"/>
+        <!-- Campo de texto para el título del evento -->
+        <CampoTexto v-model="tituloEvento" etiqueta="Título del evento" placeholder="Escriba el título del evento" />
+        <!-- Selector de fecha para la fecha del evento -->
         <SelectorFecha v-model="fechaSeleccionada" />
+        <!-- Lista desplegable para seleccionar la hora del evento -->
         <ListaDesplegable v-model="horaSeleccionada" :opciones="opcionesHorarios" etiqueta="Horarios" />
-        <CampoTexto v-model="descripcionEvento" etiqueta="Descripción del evento" placeholder="Escriba la descripción del evento"/>
+        <!-- Campo de texto para la descripción del evento -->
+        <CampoTexto v-model="descripcionEvento" etiqueta="Descripción del evento"
+            placeholder="Escriba la descripción del evento" />
+        <!-- Lista desplegable para seleccionar la ubicación del evento -->
         <ListaDesplegable v-model="ubicacionSeleccionada" :opciones="opcionesUbicaciones" etiqueta="Ubicaciones" />
         <div class="d-flex justify-content-end">
+            <!-- Botón para crear el evento -->
             <BotonOpcion @click="crearEvento" texto="Crear" tipo="aceptar" />
+            <!-- Botón para cancelar y limpiar los datos -->
             <BotonOpcion @click="limpiarDatos" texto="Cancelar" tipo="cancelar" />
         </div>
+        <!-- Componente de carga para mostrar durante las peticiones -->
         <PantallaCarga v-if="estaHaciendoPeticion" />
     </div>
 </template>
@@ -21,6 +31,12 @@ import CampoTexto from '../CampoTexto.vue'
 import PantallaCarga from '../PantallaCarga.vue'
 import BotonOpcion from '../BotonOpcion.vue'
 import MensajeAlerta from '../MensajeAlerta.vue'
+
+/**
+ * @component
+ * @name ContenedorCrear
+ * @description Un contenedor para crear un evento con campos de texto, selecciones de fecha y hora, y listas desplegables.
+ */
 export default {
     name: 'ContenedorCrear',
     components: {
@@ -33,11 +49,35 @@ export default {
     },
     data() {
         return {
+            /**
+             * @description Título del evento
+             * @type {String|null}
+             */
             tituloEvento: null,
+            /**
+             * @description Fecha seleccionada para el evento
+             * @type {String|null}
+             */
             fechaSeleccionada: null,
+            /**
+             * @description Hora seleccionada para el evento
+             * @type {String|null}
+             */
             horaSeleccionada: null,
+            /**
+             * @description Fecha y hora del evento combinadas
+             * @type {String}
+             */
             fechaHoraEvento: "",
+            /**
+             * @description Ubicación seleccionada para el evento
+             * @type {String|null}
+             */
             ubicacionSeleccionada: null,
+            /**
+             * @description Opciones disponibles para los horarios
+             * @type {Array}
+             */
             opcionesHorarios: [
                 { value: null, text: 'Seleccione un horario', disabled: true },
                 { value: '08:00:00', text: '08:00 - 10:00' },
@@ -49,22 +89,53 @@ export default {
                 { value: '20:00:00', text: '20:00 - 22:00' },
                 { value: '22:00:00', text: '22:00 - 00:00' }
             ],
+            /**
+             * @description Opciones disponibles para las ubicaciones
+             * @type {Array}
+             */
             opcionesUbicaciones: [],
+            /**
+             * @description Descripción del evento
+             * @type {String|null}
+             */
             descripcionEvento: null,
+            /**
+             * @description Indica si se está realizando una petición
+             * @type {Boolean}
+             */
             estaHaciendoPeticion: false,
-            mensajeAlerta: "",  
+            /**
+             * @description Mensaje de la alerta
+             * @type {String}
+             */
+            mensajeAlerta: "",
+            /**
+             * @description Tipo de la alerta
+             * @type {String}
+             */
             tipoAlerta: ""
         }
     },
     watch: {
+        /**
+         * @description Observa cambios en la fecha seleccionada
+         * @param {String} value - Nueva fecha seleccionada
+         */
         fechaSeleccionada(value) {
             this.fechaHoraEvento = value + ' ' + (this.horaSeleccionada ? this.horaSeleccionada : "")
         },
+        /**
+         * @description Observa cambios en la hora seleccionada
+         * @param {String} value - Nueva hora seleccionada
+         */
         horaSeleccionada(value) {
             this.fechaHoraEvento = (this.fechaSeleccionada ? this.fechaSeleccionada : "") + ' ' + value
         }
     },
     methods: {
+        /**
+         * @description Obtiene las ubicaciones desde el servidor
+         */
         obtenerUbicaciones() {
             this.estaHaciendoPeticion = true
             fetch('http://localhost:5000/locations')
@@ -88,6 +159,9 @@ export default {
                     this.estaHaciendoPeticion = false
                 })
         },
+        /**
+         * @description Crea un evento nuevo y lo envía al servidor
+         */
         crearEvento() {
             if (this.tituloEvento == "" || this.fechaHoraEvento != "%Y-%m-%d %H:%M:%S" || this.descripcionEvento == "" || this.ubicacionSeleccionada == null) {
                 this.tipoAlerta = "danger";
@@ -129,6 +203,9 @@ export default {
                     console.error(error)
                 })
         },
+        /**
+         * @description Limpia todos los datos del formulario
+         */
         limpiarDatos() {
             this.tituloEvento = null
             this.fechaSeleccionada = null

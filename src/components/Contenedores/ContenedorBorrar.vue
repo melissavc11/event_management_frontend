@@ -1,9 +1,13 @@
 <template>
     <div>
+        <!-- Componente de alerta para mostrar mensajes -->
         <MensajeAlerta :mensaje="mensajeAlerta" :tipo="tipoAlerta" ref="componenteAlerta" />
+        <!-- Lista desplegable para seleccionar el evento a borrar -->
         <ListaDesplegable v-model="eventoSeleccionado" :opciones="opcionesEventos" etiqueta="Eventos" />
         <div class="d-flex justify-content-end">
+            <!-- Botón para borrar el evento seleccionado -->
             <BotonOpcion @click="borrarEvento" texto="Borrar" tipo="aceptar" />
+            <!-- Botón para cancelar y limpiar los datos -->
             <BotonOpcion @click="limpiarDatos" texto="Cancelar" tipo="cancelar" />
         </div>
     </div>
@@ -13,6 +17,12 @@
 import ListaDesplegable from '../ListaDesplegable.vue';
 import BotonOpcion from '../BotonOpcion.vue';
 import MensajeAlerta from '../MensajeAlerta.vue';
+
+/**
+ * @component
+ * @name ContenedorBorrar
+ * @description Un contenedor para borrar un evento seleccionado de una lista desplegable.
+ */
 export default {
     name: 'ContenedorBorrar',
     components: {
@@ -21,19 +31,42 @@ export default {
         MensajeAlerta
     },
     props: {
+        /**
+         * @description Evento pasado como prop
+         * @default null
+         */
         evento: {
             default: null
         }
     },
     data() {
         return {
+            /**
+             * @description Evento seleccionado para borrar
+             * @type {null|*}
+             */
             eventoSeleccionado: null,
+            /**
+             * @description Opciones disponibles de eventos para seleccionar
+             * @type {Array}
+             */
             opcionesEventos: [],
+            /**
+             * @description Mensaje de la alerta
+             * @type {String}
+             */
             mensajeAlerta: "",
+            /**
+             * @description Tipo de la alerta
+             * @type {String}
+             */
             tipoAlerta: "",
         }
     },
     methods: {
+        /**
+         * @description Obtiene los eventos desde el servidor
+         */
         obtenerEventos() {
             this.estaHaciendoPeticion = true
             fetch('http://localhost:5000/events')
@@ -60,8 +93,11 @@ export default {
                     console.error(error)
                     this.estaHaciendoPeticion = false
                 }),
-            this.estaHaciendoPeticion = false
+                this.estaHaciendoPeticion = false
         },
+        /**
+         * @description Borra el evento seleccionado
+         */
         borrarEvento() {
             if (this.eventoSeleccionado == null) {
                 this.tipoAlerta = "danger";
@@ -98,17 +134,24 @@ export default {
                     console.error(error)
                 })
         },
+        /**
+         * @description Limpia los datos del formulario
+         */
         limpiarDatos() {
             this.eventoSeleccionado = null
         }
     },
     watch: {
+        /**
+         * @description Observa cambios en la prop `evento`
+         * @param {*} value - Nuevo valor de la prop `evento`
+         */
         evento(value) {
             this.eventoSeleccionado = this.opcionesEventos.find(opcion => opcion.value === value.index).value
         }
     },
     mounted() {
-        this.obtenerEventos()
+        this.obtenerEventos();
     }
 }
 </script>
