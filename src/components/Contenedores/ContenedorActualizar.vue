@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Componente de alerta para mostrar mensajes -->
-        <MensajeAlerta :mensaje="mensajeAlerta" :tipo="tipoAlerta" ref="componenteAl" />
+        <MensajeAlerta :mensaje="mensajeAlerta" :tipo="tipoAlerta" ref="componenteAlerta" />
         <!-- Lista desplegable para seleccionar el evento a actualizar -->
         <ListaDesplegable v-model="eventoSeleccionado" :opciones="opcionesEventos" etiqueta="Eventos" />
         <!-- Campo de texto para el título del evento -->
@@ -255,7 +255,7 @@ export default {
          * @description Actualiza el evento seleccionado con los nuevos datos
          */
         actualizarEvento() {
-            if (this.tituloEvento == "" || this.fechaHoraEvento != "%Y-%m-%d %H:%M:%S" || this.descripcionEvento == "" || this.ubicacionSeleccionada == null) {
+            if (this.tituloEvento == "" || this.fechaSeleccionada == null || this.horaSeleccionada == null || this.descripcionEvento == "" || this.ubicacionSeleccionada == null) {
                 this.tipoAlerta = "danger";
                 this.mensajeAlerta = "Por favor, llene todos los campos.";
                 this.$refs.componenteAlerta.showAlert()
