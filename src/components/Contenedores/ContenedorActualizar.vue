@@ -2,10 +2,10 @@
     <div>
         <MensajeAlerta :mensaje="mensajeAlerta" :tipo="tipoAlerta" ref="componenteAlerta" />
         <ListaDesplegable v-model="eventoSeleccionado" :opciones="opcionesEventos" etiqueta="Eventos" />
-        <CampoTexto v-model="tituloEvento" etiqueta="Título del evento" />
+        <CampoTexto v-model="tituloEvento" etiqueta="Título del evento" placeholder="Escriba el título del evento"/>
         <SelectorFecha v-model="fechaSeleccionada" />
         <ListaDesplegable v-model="horaSeleccionada" :opciones="opcionesHorarios" etiqueta="Horarios" />
-        <CampoTexto v-model="descripcionEvento" etiqueta="Descripción del evento" />
+        <CampoTexto v-model="descripcionEvento" etiqueta="Descripción del evento" placeholder="Escriba la descripción del evento"/>
         <ListaDesplegable v-model="ubicacionSeleccionada" :opciones="opcionesUbicaciones" etiqueta="Ubicaciones" />
         <div class="d-flex justify-content-end">
             <BotonOpcion @click="actualizarEvento" texto="Actualizar" tipo="aceptar" />
@@ -125,16 +125,16 @@ export default {
                         this.eventoSeleccionado = eventoRedirigido.index
                         localStorage.removeItem('eventoRedirigido')
                     }
+                    this.opcionesEventos = [
+                        { value: null, text: 'Seleccione un evento', disabled: true },
+                        ...this.opcionesEventos
+                    ]
                 })
                 .catch(error => {
                     alert('Error al obtener los eventos')
                     console.error(error)
                     this.estaHaciendoPeticion = false
                 }),
-                this.opcionesEventos = [
-                    { value: null, text: 'Seleccione un evento', disabled: true },
-                    ...this.opcionesEventos
-                ]
             this.estaHaciendoPeticion = false
         },
         obtenerUbicaciones() {
@@ -148,19 +148,25 @@ export default {
                             text: ubicacion.nombre_ubicacion
                         }
                     })
+                    this.opcionesUbicaciones = [
+                        { value: null, text: 'Seleccione una ubicación', disabled: true },
+                        ...this.opcionesUbicaciones
+                    ]
                 })
                 .catch(error => {
                     alert('Error al obtener las ubicaciones')
                     console.error(error)
                     this.estaHaciendoPeticion = false
                 }),
-                this.opcionesUbicaciones = [
-                    { value: null, text: 'Seleccione una ubicación', disabled: true },
-                    ...this.opcionesUbicaciones
-                ]
             this.estaHaciendoPeticion = false
         },
         actualizarEvento() {
+            if (this.tituloEvento == "" || this.fechaHoraEvento != "%Y-%m-%d %H:%M:%S" || this.descripcionEvento == "" || this.ubicacionSeleccionada == null) {
+                this.tipoAlerta = "danger";
+                this.mensajeAlerta = "Por favor, llene todos los campos.";
+                this.$refs.componenteAlerta.showAlert()
+                return;
+            }
             fetch(`http://localhost:5000/events/${this.eventoSeleccionado}`,
                 {
                     method: 'PUT',
@@ -194,6 +200,7 @@ export default {
                     this.$refs.componenteAlerta.showAlert()
                     console.error(error)
                 })
+                this.eventoSeleccionado = null
         },
         limpiarDatos() {
             this.fechaSeleccionada = null

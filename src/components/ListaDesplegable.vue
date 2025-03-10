@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-form-group :label="valorEtiqueta">
-            <b-form-select v-model="selectedOpcion" :options="registroOpciones"></b-form-select>
+            <b-form-select v-model="selectedOpcion" :options="registroOpciones" :state="listState"></b-form-select>
         </b-form-group>
     </div>
 </template>
@@ -27,11 +27,13 @@ export default {
         return {
             selectedOpcion: this.value,
             valorEtiqueta: this.etiqueta,
-            registroOpciones : this.opciones,
+            registroOpciones: this.opciones,
+            listState: null
         }
     },
     watch: {
         selectedOpcion(value) {
+            this.listState = (value || value == 0) ? true : false;
             this.$emit('input', value);
         },
         value(value) {

@@ -1,14 +1,14 @@
 <template>
     <div>
         <MensajeAlerta :mensaje="mensajeAlerta" tipo="danger" ref="componenteAlerta" />
-        <b-form-input v-model="indexEvento" type="number" placeholder="Buscar por index" :min="1"></b-form-input>
+        <b-form-input v-model="indexEvento" type="number" placeholder="Buscar por index" :min="1" :formatter="formateador"></b-form-input>
         <div class="d-flex justify-content-end py-4">
             <BotonOpcion @click="obtenerEventos(indexEvento)" texto="Buscar" tipo="aceptar" />
         </div>
         <b-table :items="items" :fields="fields" responsive="sm">
             <template #cell(options)="data">
-                <BotonOpcion @click="actualizarEvento(data.item)" texto="Actualizar" tipo="actualizar" />
-                <BotonOpcion @click="borrarEvento(data.item)" texto="Borrar" tipo="borrar" />
+                <BotonOpcion @click="actualizarEvento(data.item)" texto="Actualizar" tipo="actualizar" tamano="small" style="margin-bottom: 5%;"/>
+                <BotonOpcion @click="borrarEvento(data.item)" texto="Borrar" tipo="borrar" tamano="small"/>
             </template>
         </b-table>
         <PantallaCarga v-if="estaHaciendoPeticion" />
@@ -44,6 +44,10 @@ export default {
         }
     },
     methods: {
+        formateador(value){
+            let numeros = value.match(/[0-9]+/g);
+            return numeros ? numeros.join('') : '';
+        },
         obtenerEventos(id) {
             id = id ? parseInt(id, 10) : null;
             this.estaHaciendoPeticion = true;

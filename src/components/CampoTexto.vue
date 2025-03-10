@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-form-group :label="valorEtiqueta">
-            <b-form-input v-model="texto" type="text" class="custom-input"></b-form-input>
+            <b-form-input v-model="texto" type="text" :placeholder="placeholder" :state="textState"></b-form-input>
         </b-form-group>
     </div>
 </template>
@@ -11,21 +11,33 @@ export default {
     props: {
         value: {
             type: String,
-            default: null
+            default: ""
         },
         etiqueta: {
             type: String,
             default: "texto"
+        },
+        placeholder: {
+            type: String,
+            default: ""
+        }
+    },
+    computed: {
+        validador() {
+            return this.texto.length > 0;
         }
     },
     data() {
         return {
             texto: this.value,
-            valorEtiqueta: this.etiqueta
+            textState: null,
+            valorEtiqueta: this.etiqueta,
+            valorPlaceholder: this.placeholder
         }
     },
     watch: {
         texto(value) {
+            this.textState = value?  true : false;
             this.$emit('input', value);
         },
         value(value) {

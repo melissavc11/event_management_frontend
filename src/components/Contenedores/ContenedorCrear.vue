@@ -1,10 +1,10 @@
 <template>
     <div>
         <MensajeAlerta :mensaje="mensajeAlerta" :tipo="tipoAlerta" ref="componenteAlerta" />
-        <CampoTexto v-model="tituloEvento" etiqueta="Título del evento" />
+        <CampoTexto v-model="tituloEvento" etiqueta="Título del evento" placeholder="Escriba el título del evento"/>
         <SelectorFecha v-model="fechaSeleccionada" />
         <ListaDesplegable v-model="horaSeleccionada" :opciones="opcionesHorarios" etiqueta="Horarios" />
-        <CampoTexto v-model="descripcionEvento" etiqueta="Descripción del evento" />
+        <CampoTexto v-model="descripcionEvento" etiqueta="Descripción del evento" placeholder="Escriba la descripción del evento"/>
         <ListaDesplegable v-model="ubicacionSeleccionada" :opciones="opcionesUbicaciones" etiqueta="Ubicaciones" />
         <div class="d-flex justify-content-end">
             <BotonOpcion @click="crearEvento" texto="Crear" tipo="aceptar" />
@@ -77,18 +77,24 @@ export default {
                         }
                     })
                     this.estaHaciendoPeticion = false
+                    this.opcionesUbicaciones = [
+                        { value: null, text: 'Seleccione una ubicación', disabled: true },
+                        ...this.opcionesUbicaciones
+                    ]
                 })
                 .catch(error => {
                     alert('Error al obtener las ubicaciones')
                     console.error(error)
                     this.estaHaciendoPeticion = false
-                }),
-                this.opcionesUbicaciones = [
-                    { value: null, text: 'Seleccione una ubicación', disabled: true },
-                    ...this.opcionesUbicaciones
-                ]
+                })
         },
         crearEvento() {
+            if (this.tituloEvento == "" || this.fechaHoraEvento != "%Y-%m-%d %H:%M:%S" || this.descripcionEvento == "" || this.ubicacionSeleccionada == null) {
+                this.tipoAlerta = "danger";
+                this.mensajeAlerta = "Por favor, llene todos los campos.";
+                this.$refs.componenteAlerta.showAlert()
+                return;
+            }
             fetch('http://localhost:5000/events',
                 {
                     method: 'POST',

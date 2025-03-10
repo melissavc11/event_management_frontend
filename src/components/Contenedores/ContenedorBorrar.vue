@@ -50,20 +50,25 @@ export default {
                         this.eventoSeleccionado = eventoRedirigido.index
                         localStorage.removeItem('eventoRedirigido')
                     }
+                    this.opcionesEventos = [
+                        { value: null, text: 'Seleccione un evento', disabled: true },
+                        ...this.opcionesEventos
+                    ]
                 })
                 .catch(error => {
                     alert('Error al obtener los eventos')
                     console.error(error)
                     this.estaHaciendoPeticion = false
                 }),
-                this.opcionesEventos = [
-                    { value: null, text: 'Seleccione un evento', disabled: true },
-                    ...this.opcionesEventos
-                ]
             this.estaHaciendoPeticion = false
         },
         borrarEvento() {
-            console.log("entro")
+            if (this.eventoSeleccionado == null) {
+                this.tipoAlerta = "danger";
+                this.mensajeAlerta = "Por favor, seleccione un evento.";
+                this.$refs.componenteAlerta.showAlert()
+                return;
+            }
             fetch(`http://localhost:5000/events/${this.eventoSeleccionado}`,
                 {
                     method: 'DELETE',
