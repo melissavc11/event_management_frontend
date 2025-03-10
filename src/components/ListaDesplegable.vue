@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-form-group :label="valorEtiqueta">
-            <b-form-select v-model="selectedTime" :options="timeOptions"></b-form-select>
+            <b-form-select v-model="selectedOpcion" :options="registroOpciones"></b-form-select>
         </b-form-group>
     </div>
 </template>
@@ -10,7 +10,6 @@
 export default {
     props: {
         value: {
-            type: String,
             default: null
         },
         etiqueta: {
@@ -26,17 +25,20 @@ export default {
     },
     data() {
         return {
-            selectedTime: this.value,
+            selectedOpcion: this.value,
             valorEtiqueta: this.etiqueta,
-            timeOptions : this.opciones,
+            registroOpciones : this.opciones,
         }
     },
     watch: {
-        selectedTime(value) {
+        selectedOpcion(value) {
             this.$emit('input', value);
         },
         value(value) {
-            this.selectedTime = value;
+            this.selectedOpcion = value;
+        },
+        opciones(value) {
+            this.registroOpciones = value;
         }
     }
 }

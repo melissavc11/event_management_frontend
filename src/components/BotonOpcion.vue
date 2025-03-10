@@ -1,6 +1,7 @@
 <template>
     <div>
-        <button @click="emitirEvento" :class="'boton '+estilo">{{ texto }}</button>
+        <button @click="emitirEvento" :class="'boton '+estilo" :style="{ fontSize: tamano }">{{ texto }}
+        </button>
     </div>
 </template>
 
@@ -14,6 +15,10 @@ export default {
         tipo: {
             type: String,
             default: "crear"
+        },
+        tamano: {
+            type: String,
+            default: "medium"
         }
     },
     computed: {
