@@ -163,10 +163,11 @@ export default {
          * @description Crea un evento nuevo y lo envía al servidor
          */
         crearEvento() {
-            if (this.tituloEvento == "" || this.fechaHoraEvento != "%Y-%m-%d %H:%M:%S" || this.descripcionEvento == "" || this.ubicacionSeleccionada == null) {
+            if (this.tituloEvento == "" || this.fechaSeleccionada == null || this.horaSeleccionada == null || this.descripcionEvento == "" || this.ubicacionSeleccionada == null) {
                 this.tipoAlerta = "danger";
                 this.mensajeAlerta = "Por favor, llene todos los campos.";
                 this.$refs.componenteAlerta.showAlert()
+                console.log(this.tituloEvento, this.fechaHoraEvento, this.descripcionEvento, this.ubicacionSeleccionada)
                 return;
             }
             fetch('http://localhost:5000/events',
